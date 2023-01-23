@@ -14,14 +14,11 @@ def prompt_hour():
         if alarme == standart_date:
             print ("Alarme enclenché")
 
-def change_hour():
-    hours = input("Veuillez entrer la nouvelle heure(0-23):")
-    minutes = input("Veuillez entrer les minutes de la nouvelle heure(0-59):")
-    seconds = input("Veuillez entrer les secondes de la nouvelle heure:")
-    if verif_entry(hours, minutes, seconds) =="ok":
+def change_hour(hour):
+    if verif_entry((hour[0], hour[1], hour[2])) =="ok":
         print("L'heure a bien été changée")
 
-        return datetime.strptime(hours + ":" + minutes + ":" + seconds, "%H:%M:%S")
+        return datetime.strptime(hour[0]+ ":" + hour[1] + ":" + hour[2], "%H:%M:%S")
     else: print("Une erreur d'entrée est survenue ,veuillez vérifier votre entrée et recommencer")
 
 
@@ -35,19 +32,25 @@ def main_function():
         match test:
             case "Y":
                 print(standart_date)
+
             case"A":
-                alarm()
+                hours = input("Veuillez entrer l'heure de l'alarme(0-23):")
+                minutes = input("Veuillez entrer les minutes de l'alarme(0-59):")
+                seconds = input("Veuillez entrer les secondes l'alarme:")
+                alarm((hours,minutes,seconds))
+
             case "H":
-                hour_now=change_hour()
+                hours = input("Veuillez entrer la nouvelle heure(0-23):")
+                minutes = input("Veuillez entrer les minutes de la nouvelle heure(0-59):")
+                seconds = input("Veuillez entrer les secondes de la nouvelle heure:")
+                hour_now = change_hour((hours,minutes,seconds))
+
         test = input(message)
 
-def alarm():
-    hours = input("Veuillez entrer l'heure de votre alarme(0-23):")
-    minutes = input("Veuillez entrer les minutes de votre alarme(0-59):")
-    seconds = input("Veuillez entrer les secondes de votre alarme(0-59):")
-    if verif_entry(hours, minutes, seconds) =="ok":
+def alarm(hour):
+    if verif_entry(hour) =="ok":
         global alarme
-        alarme=hours+":"+minutes+":"+seconds
+        alarme=hour[0]+":"+hour[1]+":"+hour[2]
         print("L'alarme a bien été défini et activée")
 
     else:
@@ -56,9 +59,9 @@ def alarm():
 
 
 
-def verif_entry(hours, minutes, seconds):
+def verif_entry(hour):
     try:
-        hours = int(hours)
+        hours = int(hour[0])
         if 23 >= hours > 0:
             pass
         else:
@@ -67,7 +70,7 @@ def verif_entry(hours, minutes, seconds):
         return 0
 
     try:
-        minutes = int(minutes)
+        minutes = int(hour[1])
         if 59 >= minutes >= 0:
             pass
         else:
@@ -76,7 +79,7 @@ def verif_entry(hours, minutes, seconds):
         return 1
 
     try:
-        seconds = int(seconds)
+        seconds = int(hour[2])
         if 59 >= seconds >= 0:
             pass
         else:
