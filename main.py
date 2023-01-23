@@ -1,9 +1,12 @@
 from datetime import datetime, timedelta
 import time
 import threading
+
 starttime = time.time()
 alarme = ""
 hour_now = datetime.now()
+
+
 def prompt_hour():
     global hour_now
     while True:
@@ -12,51 +15,27 @@ def prompt_hour():
         global standart_date
         standart_date = hour_now.strftime("%H:%M:%S")
         if alarme == standart_date:
-            print ("Alarme enclenché")
+            print("Alarme enclenché")
+
 
 def change_hour(hour):
-    if verif_entry((hour[0], hour[1], hour[2])) =="ok":
+    if verif_entry((hour[0], hour[1], hour[2])) == "ok":
         print("L'heure a bien été changée")
 
-        return datetime.strptime(hour[0]+ ":" + hour[1] + ":" + hour[2], "%H:%M:%S")
-    else: print("Une erreur d'entrée est survenue ,veuillez vérifier votre entrée et recommencer")
+        return datetime.strptime(hour[0] + ":" + hour[1] + ":" + hour[2], "%H:%M:%S")
+    else:
+        print("Une erreur d'entrée est survenue ,veuillez vérifier votre entrée et recommencer")
 
-
-def main_function():
-    global hour_now
-    x = threading.Thread(target=prompt_hour)
-    x.start()
-    message="Voulez vous afficher l'heure (Y) définir une alarme(A) ou changer l'heure(H)?"
-    test = input(message)
-    while True:
-        match test:
-            case "Y":
-                print(standart_date)
-
-            case"A":
-                hours = input("Veuillez entrer l'heure de l'alarme(0-23):")
-                minutes = input("Veuillez entrer les minutes de l'alarme(0-59):")
-                seconds = input("Veuillez entrer les secondes l'alarme:")
-                alarm((hours,minutes,seconds))
-
-            case "H":
-                hours = input("Veuillez entrer la nouvelle heure(0-23):")
-                minutes = input("Veuillez entrer les minutes de la nouvelle heure(0-59):")
-                seconds = input("Veuillez entrer les secondes de la nouvelle heure:")
-                hour_now = change_hour((hours,minutes,seconds))
-
-        test = input(message)
 
 def alarm(hour):
-    if verif_entry(hour) =="ok":
+    if verif_entry(hour) == "ok":
         global alarme
-        alarme=hour[0]+":"+hour[1]+":"+hour[2]
+        alarme = hour[0] + ":" + hour[1] + ":" + hour[2]
         print("L'alarme a bien été défini et activée")
 
     else:
         print("Entrée incorrecte, veuillez recommencer")
         return 0
-
 
 
 def verif_entry(hour):
@@ -86,6 +65,31 @@ def verif_entry(hour):
             return 1
     except ValueError:
         return 1
-    else:return "ok"
+    else:
+        return "ok"
 
-main_function()
+
+#Démmarage de l'horloge sur un thread séparer du reste du programme
+x = threading.Thread(target=prompt_hour)
+x.start()
+
+message = "Voulez vous afficher l'heure (Y) définir une alarme(A) ou changer l'heure(H)?"
+test = input(message)
+while True:
+    match test:
+        case "Y":
+            print(standart_date)
+
+        case "A":
+            hours = input("Veuillez entrer l'heure de l'alarme(0-23):")
+            minutes = input("Veuillez entrer les minutes de l'alarme(0-59):")
+            seconds = input("Veuillez entrer les secondes l'alarme:")
+            alarm((hours, minutes, seconds))
+
+        case "H":
+            hours = input("Veuillez entrer la nouvelle heure(0-23):")
+            minutes = input("Veuillez entrer les minutes de la nouvelle heure(0-59):")
+            seconds = input("Veuillez entrer les secondes de la nouvelle heure:")
+            hour_now = change_hour((hours, minutes, seconds))
+
+    test = input(message)
